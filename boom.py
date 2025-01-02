@@ -1,6 +1,7 @@
 import time
+
+import pyautogui
 import pyperclip
-import keyboard
 
 seconds = 10
 
@@ -21,16 +22,18 @@ def content_boom():
     countdown(seconds)
 
     for j in range(times):
-        for str1 in strs.split("。"):
+        for str1 in strs.split("\n"):
+            # 复制到剪切板
             pyperclip.copy(str1)
-            keyboard.press_and_release('ctrl+v')
-            keyboard.press_and_release('enter')
-            time.sleep(0.1)
+
+            # 粘贴文本并按下回车键
+            pyautogui.hotkey('ctrl', 'v')
+            pyautogui.press('enter')
 
 
 # 发送文件内容
 def file_boom():
-    path = input("请指定文件按路径:\n")
+    path = input("请指定文件路径:\n")
     path = path.replace('"', '')
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
@@ -40,8 +43,8 @@ def file_boom():
     for j in range(1):
         for str1 in str_list:
             pyperclip.copy(str1)
-            keyboard.press_and_release('ctrl+v')
-            keyboard.press_and_release('enter')
+            pyautogui.hotkey('ctrl', 'v')
+            pyautogui.press('enter')
             time.sleep(0.1)
 
 
@@ -56,16 +59,19 @@ def setting():
 def boom():
     while True:
         main()
-        nums = int(input("请选择:\n"))
-        match nums:
-            case 1:
-                content_boom()
-            case 2:
-                file_boom()
-            case 3:
-                setting()
-            case 4:
-                break
+        try:
+            nums = int(input("请选择:\n"))
+            match nums:
+                case 1:
+                    content_boom()
+                case 2:
+                    file_boom()
+                case 3:
+                    setting()
+                case _:
+                    break
+        except ValueError:
+            break
 
 
 # 菜单
