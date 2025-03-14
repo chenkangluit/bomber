@@ -23,7 +23,7 @@
 1. 克隆仓库：
 
 ```bash
-git clone https://gitee.com/chenkangluit/bomber.git
+git clone https://github.com/chenkangluit/bomber.git
 cd bomber
 ```
 
@@ -61,7 +61,7 @@ options:
 ### 参数示例
 
 ```bash
-# 发送自定义文本（20条）
+# 发送自定义文本 “？”（20条）
 python .\bomber.py content ? --times 20
 
 # 从文件读取内容发送
