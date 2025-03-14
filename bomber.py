@@ -2,49 +2,57 @@ import time
 import argparse
 import pyautogui
 import pyperclip
+from tqdm import tqdm  # 新增进度条库
 
 seconds = 10
 
-# 倒计时
-def countdown(second):
-    print("请在倒计时时间内，把光标放到输入框\n")
-    for i in range(second, 0, -1):
-        print(f"{i}秒", end='\r')
-        time.sleep(1)
-    print("倒计时结束！")
 
-# 发送指定文字
-def content_boom(content, times):
+def countdown(second):
+    print("请在倒计时时间内，把光标放到输入框")
+    for i in range(second, 0, -1):
+        print(f"倒计时剩余: {i}秒", end='\r')  # 优化倒计时显示
+        time.sleep(1)
+    print("\n倒计时结束！")  # 强制换行避免进度条重叠
+
+
+def content_bomb(content, times):
     countdown(seconds)
 
-    for j in range(times):
-        for str1 in content.split("\n"):
-            # 复制到剪切板
-            pyperclip.copy(str1)
+    # 使用tqdm进度条包裹外部循环
+    with tqdm(total=times, desc="发送进度", ncols=75) as pbar:
+        for j in range(times):
+            for str1 in content.split("\n"):
+                if str1.strip() == "": continue  # 跳过空行
+                pyperclip.copy(str1)
+                pyautogui.hotkey('ctrl', 'v')
+                pyautogui.press('enter')
+            pbar.update(1)  # 每次完整发送后更新进度
+    print("✓ 消息发送完成")  # 添加完成标识
 
-            # 粘贴文本并按下回车键
-            pyautogui.hotkey('ctrl', 'v')
-            pyautogui.press('enter')
 
-# 发送文件内容
-def file_boom(file_path):
+def file_bomb(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = f.read()
-    str_list = content.split("\n")
+
+    str_list = [s for s in content.split("\n") if s.strip()]  # 过滤空行
     countdown(seconds)
 
-    for j in range(1):
+    # 文件发送也添加进度条
+    with tqdm(total=len(str_list), desc="文件发送", ncols=75) as pbar:
         for str1 in str_list:
             pyperclip.copy(str1)
             pyautogui.hotkey('ctrl', 'v')
             pyautogui.press('enter')
+            pbar.update(1)
             time.sleep(0.1)
+    print("✓ 文件发送完成")
 
-# 设置倒计时
+
 def setting(new_seconds):
     global seconds
     seconds = new_seconds
     print(f"倒计时时间设置为:{seconds}")
+
 
 def main():
     parser = argparse.ArgumentParser(description="消息轰炸工具")
@@ -66,13 +74,14 @@ def main():
     args = parser.parse_args()
 
     if args.command == "content":
-        content_boom(args.content, args.times)
+        content_bomb(args.content, args.times)
     elif args.command == "file":
-        file_boom(args.file_path)
+        file_bomb(args.file_path)
     elif args.command == "setting":
         setting(args.seconds)
     else:
         print("请指定一个有效的命令")
+
 
 if __name__ == "__main__":
     main()

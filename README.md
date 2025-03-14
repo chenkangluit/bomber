@@ -23,16 +23,31 @@
 1. 克隆仓库：
 
 ```bash
-git clone https://github.com/yourusername/message-bomber.git
-cd message-bomber
+git clone https://gitee.com/chenkangluit/bomber.git
+cd bomber
 ```
 
 ## 🚀 使用说明
 
 ### 快速开始
 
-```python
-python message_bomber.py
+```
+python bomber.py -h
+usage: bomber.py [-h] {content,file,setting} ...
+
+消息轰炸工具
+
+positional arguments:
+  {content,file,setting}
+                        可用的命令
+    content             发送指定文字
+    file                发送文件内容
+    setting             设置倒计时
+
+options:
+  -h, --help            show this help message and exit
+
+
 ```
 
 ### 操作演示
@@ -46,11 +61,11 @@ python message_bomber.py
 ### 参数示例
 
 ```bash
-# 发送自定义文本（30条）
-python message_bomber.py -m text -t "Hello World" -c 30
+# 发送自定义文本（20条）
+python .\bomber.py content ? --times 20
 
 # 从文件读取内容发送
-python message_bomber.py -m file -f messages.txt
+python bomber.py file ./message
 ```
 
 ## ⚠️ 注意事项
